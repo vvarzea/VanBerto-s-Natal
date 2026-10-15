@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; frame-src 'self' https://vvarzea.github.io; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Natal com o VanBerto's — Jogos de Natal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="icon" type="image/png" href="favicon.png">
@@ -28,7 +28,11 @@ html,body{width:100%;height:100dvh;overflow:hidden;}
 body{
   display:flex;align-items:center;justify-content:center;
   height:100dvh;min-height:100dvh;
-  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+  padding:
+    max(min(1.5vh,16px), env(safe-area-inset-top,0px))
+    max(min(1.5vw,16px), env(safe-area-inset-right,0px))
+    max(min(1.5vh,16px), env(safe-area-inset-bottom,0px))
+    max(min(1.5vw,16px), env(safe-area-inset-left,0px));
   font-family:'Nunito',sans-serif;
   background:
     radial-gradient(ellipse at 15% 25%,rgba(220,38,38,0.35) 0%,transparent 55%),
@@ -72,19 +76,22 @@ body::before{
 
 .modal-wrap{
   position:relative;z-index:1;
-  width:100%;
+  width:min(98vw,1100px);
   height:100%;max-height:100%;
   display:flex;flex-direction:column;
   isolation:isolate;
 }
 .card{
   background:linear-gradient(155deg,#0f2a1c,#08170f);
-  border-radius:0;overflow:hidden;
+  border-radius:clamp(12px,1.5vw,24px);overflow:hidden;
   display:flex;flex-direction:column;
   flex:1 1 0;min-height:0;overflow:clip;
-  position:relative;
+  box-shadow:
+    0 0 0 3px #dc2626, 0 0 0 6px #ffd700, 10px 10px 0 rgba(0,0,0,0.45), 0 0 60px rgba(220,38,38,0.25),
+    0 0 50px rgba(100,80,255,0.15),
+    0 0 30px rgba(255,200,0,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.07);
 }
-.card::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:5;box-shadow:inset 0 0 0 3px #dc2626, inset 0 0 0 6px #ffd700, inset 0 0 40px rgba(220,38,38,0.20);}
 
 .modal-hero{
   background:linear-gradient(160deg,#12301f,#0a1d13);
@@ -236,7 +243,6 @@ body::before{
   transition:transform 0.22s cubic-bezier(.34,1.56,.64,1);
 }
 
-.game-icon-tile svg{width:84%;height:84%;display:block;overflow:visible;}
 .game-info{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
 .game-name{
   font-family:'Fredoka',sans-serif;font-weight:600;
@@ -313,15 +319,6 @@ body::before{
   padding:3px 10px;border-radius:20px;
   border:1px solid rgba(255,255,255,0.10);
 }
-
-#game-ov{position:fixed;inset:0;z-index:2000;background:#000;overscroll-behavior:contain;}
-#game-ov[hidden]{display:none;}
-#game-fr{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;display:block;}
-#game-x{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:calc(8px + env(safe-area-inset-right,0px));z-index:2;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,0.85);background:rgba(220,38,38,0.78);color:#fff;font:700 20px/1 'Fredoka',sans-serif;cursor:pointer;opacity:.6;box-shadow:0 2px 8px rgba(0,0,0,.5);touch-action:manipulation;}
-#game-x:hover,#game-x:focus-visible{opacity:1;}
-#game-x:focus-visible{outline:3px solid #ffd700;outline-offset:2px;}
-.ios-hint{align-self:center;max-width:320px;margin:10px 0 0;text-align:center;font:700 12px 'Nunito',sans-serif;color:rgba(255,255,255,0.85);flex-shrink:0;}
-.ios-hint[hidden]{display:none;}
 </style>
 </head>
 <body>
@@ -380,17 +377,6 @@ const SECTIONS=[
   {id:'comboio',u:'https://vvarzea.github.io/VanBerto-s-Natal-Comboio/',i:'🚂',n:'Comboio',d:'Conduz o comboio de Natal e apanha o que está certo.',tag:'Comboio de Natal',c:'#ff6eb4',r:'255,110,180,0.50'},
   {id:'corrida',u:'https://vvarzea.github.io/VanBerto-s-Natal-Corrida/',i:'🛷',n:'Corrida',d:'Responde bem e o teu trenó avança — compete com os colegas.',tag:'Vários jogadores',c:'#f97316',r:'249,115,22,0.55'}]}
 ];
-const ICONS={
-missao:`<circle cx="32" cy="40" r="15" fill="#ffd9b8"/><path d="M17 43Q20 58 32 60Q44 58 47 43Q40 49 32 49Q24 49 17 43Z" fill="#fff"/><path d="M17 32C16 14 34 6 46 14C50 18 50 26 48 32Z" fill="#dc2626"/><rect x="14" y="28" width="36" height="9" rx="4.5" fill="#fff"/><circle cx="48" cy="14" r="5" fill="#fff"/><circle cx="26" cy="42" r="2" fill="#101a30" stroke="none"/><circle cx="38" cy="42" r="2" fill="#101a30" stroke="none"/><circle cx="32" cy="46" r="3" fill="#f87171"/>`,
-codigo:`<rect x="9" y="26" width="6" height="12" rx="3" fill="#16233e"/><rect x="49" y="26" width="6" height="12" rx="3" fill="#16233e"/><path d="M32 16V9"/><circle cx="32" cy="7" r="3.5" fill="#48b4ff"/><rect x="14" y="16" width="36" height="32" rx="12" fill="#fff"/><rect x="19" y="21" width="26" height="20" rx="8" fill="#2a9bf0"/><ellipse cx="27" cy="30" rx="2.6" ry="3.4" fill="#0a0f1c" stroke="none"/><ellipse cx="37" cy="30" rx="2.6" ry="3.4" fill="#0a0f1c" stroke="none"/><path d="M28 36Q32 39 36 36" fill="none" stroke="#0a0f1c" stroke-width="2"/><rect x="20" y="47" width="24" height="11" rx="5" fill="#e6edf7"/><path d="M28 50L25 52.5L28 55M36 50L39 52.5L36 55" fill="none" stroke="#16a34a" stroke-width="2.4"/>`,
-puzzle:`<path d="M10 22H23C19 8 41 8 37 22H50V29C39 24 39 44 50 39V54H10Z" fill="#c084fc"/><path d="M16 26H24" stroke="#fff" stroke-width="3" opacity=".55"/><circle cx="48" cy="12" r="0" /><path d="M50 8L51.5 12L55.5 13.5L51.5 15L50 19L48.5 15L44.5 13.5L48.5 12Z" fill="#ffd700" stroke-width="1.8"/>`,
-sopa:`<rect x="7" y="8" width="42" height="42" rx="6" fill="#fff"/><rect x="10" y="12" width="36" height="12" rx="6" fill="#bef264" stroke-width="2"/><g font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="10" fill="#101a30" stroke="none" text-anchor="middle"><text x="16" y="21">N</text><text x="28" y="21">A</text><text x="40" y="21">T</text><text x="16" y="33.5">O</text><text x="28" y="33.5">L</text><text x="40" y="33.5">E</text><text x="16" y="45.5">S</text><text x="28" y="45.5">A</text><text x="40" y="45.5">P</text></g><circle cx="43" cy="43" r="9" fill="rgba(186,230,253,.5)"/><path d="M49.5 49.5L58 58" stroke-width="5.5"/>`,
-cruzadas:`<rect x="8" y="8" width="42" height="42" rx="5" fill="#fff"/><g fill="#101a30" stroke="none"><rect x="8" y="8" width="10.5" height="10.5" rx="2"/><rect x="29" y="8" width="10.5" height="10.5"/><rect x="18.5" y="18.5" width="10.5" height="10.5"/><rect x="39.5" y="18.5" width="10.5" height="10.5"/><rect x="8" y="29" width="10.5" height="10.5"/><rect x="29" y="39.5" width="10.5" height="10.5"/></g><path d="M8 18.5H50M8 29H50M8 39.5H50M18.5 8V50M29 8V50M39.5 8V50" stroke-width="1.4" fill="none"/><rect x="8" y="8" width="42" height="42" rx="5" fill="none"/><g transform="translate(46 44) rotate(45)"><rect x="-4.5" y="-18" width="9" height="24" fill="#fbbf24"/><path d="M-4.5 6L0 15L4.5 6Z" fill="#ffd9b8"/><rect x="-4.5" y="-23" width="9" height="5" rx="2" fill="#f87171"/></g>`,
-memoria:`<g transform="rotate(-10 24 34)"><rect x="8" y="12" width="29" height="40" rx="5" fill="#fff"/><rect x="14" y="31" width="17" height="14" rx="2" fill="#dc2626"/><rect x="12" y="27" width="21" height="6" rx="2" fill="#ef4444"/><path d="M22.5 27V45" stroke="#ffd700" stroke-width="3"/><path d="M22.5 27Q16 19 19 19Q23 19 22.5 27Q26 19 29 20Q31 22 22.5 27" fill="#ffd700" stroke-width="1.8"/></g><g transform="rotate(10 42 34)"><rect x="27" y="12" width="29" height="40" rx="5" fill="#0e7490"/><text x="41.5" y="41" text-anchor="middle" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="26" fill="#fff" stroke="none">?</text></g>`,
-comboio:`<circle cx="14" cy="8" r="4" fill="#fff" stroke-width="2"/><circle cx="21" cy="4.5" r="3" fill="#fff" stroke-width="2"/><rect x="10" y="12" width="9" height="14" rx="2" fill="#334155"/><rect x="8" y="10" width="13" height="4" rx="2" fill="#475569"/><rect x="6" y="26" width="32" height="18" rx="5" fill="#ef4444"/><rect x="36" y="18" width="20" height="26" rx="3" fill="#dc2626"/><rect x="40" y="22" width="12" height="10" rx="2" fill="#bae6fd"/><rect x="4" y="42" width="54" height="6" rx="3" fill="#334155"/><circle cx="17" cy="51" r="6" fill="#fbbf24"/><circle cx="33" cy="52" r="5" fill="#fbbf24"/><circle cx="48" cy="51" r="6" fill="#fbbf24"/><g fill="#101a30" stroke="none"><circle cx="17" cy="51" r="1.8"/><circle cx="33" cy="52" r="1.5"/><circle cx="48" cy="51" r="1.8"/></g>`,
-corrida:`<path d="M2 30H8M0 38H8M3 46H9" stroke="#fff" stroke-width="2.4" opacity=".75" fill="none"/><rect x="21" y="14" width="16" height="14" rx="2" fill="#22c55e"/><path d="M29 14V28M21 21H37" stroke="#ffd700" stroke-width="3" fill="none"/><path d="M29 14Q23 6 25 8Q30 8 29 14Q33 7 35 9Q36 11 29 14" fill="#ffd700" stroke-width="1.8"/><path d="M12 28H54Q57 40 46 46H22Q11 44 12 28Z" fill="#dc2626"/><path d="M16 46V53M44 46V53" fill="none"/><path d="M8 55H46Q60 55 58 40" fill="none" stroke="#ffd700" stroke-width="4.5"/><path d="M8 55H46Q60 55 58 40" fill="none" stroke-width="1.2" opacity=".5"/>`
-};
-function ico(x){return '<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" stroke="#101a30" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">'+x+'</svg>';}
 function esc(x){return x.replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 function getPlayed(){try{return JSON.parse(localStorage.getItem('vb-played-natal')||'[]');}catch(e){return [];}}
 function markPlayed(id){try{const p=getPlayed();if(p.indexOf(id)<0){p.push(id);localStorage.setItem('vb-played-natal',JSON.stringify(p));}}catch(e){}}
@@ -402,55 +388,20 @@ function markPlayed(id){try{const p=getPlayed();if(p.indexOf(id)<0){p.push(id);l
     '<div class="games-grid '+(sec.g.length===1?'games-grid-1':'games-grid-2')+'">'+sec.g.map(function(g){
       const url=g.u;
       return '<a class="game-card'+(played.indexOf(g.id)>=0?' played':'')+'" data-id="'+g.id+'" href="'+url+'"'+(NEW_TAB?' target="_blank" rel="noopener noreferrer"':' rel="noopener"')+' style="--gc:'+g.c+';--gc-glow:rgba('+g.r+');">'+
-      '<div class="game-icon-tile" aria-hidden="true">'+(ICONS[g.id]?ico(ICONS[g.id]):g.i)+'</div><div class="game-info"><h3 class="game-name">'+esc(g.n)+'</h3><div class="game-desc">'+esc(g.d)+'</div><span class="game-tag">'+esc(g.tag)+'</span></div></a>';
+      '<div class="game-icon-tile" aria-hidden="true">'+g.i+'</div><div class="game-info"><h3 class="game-name">'+esc(g.n)+'</h3><div class="game-desc">'+esc(g.d)+'</div><span class="game-tag">'+esc(g.tag)+'</span></div></a>';
     }).join('')+'</div>';
   }).join('');
   document.getElementById('total-a').textContent=total;document.getElementById('total-b').textContent=total;
   const box=document.getElementById('games');
   const btn=document.createElement('button');btn.type='button';btn.className='reset-btn';btn.textContent='↺ Recomeçar (limpar os ✓)';box.appendChild(btn);
   function refresh(){const p=getPlayed();box.querySelectorAll('.game-card').forEach(function(a){a.classList.toggle('played',p.indexOf(a.dataset.id)>=0);});btn.hidden=!p.length;}
-  const wrap=document.querySelector('.modal-wrap'),ov=document.createElement('div');
-  ov.id='game-ov';ov.hidden=true;
-  ov.innerHTML='<iframe id="game-fr" title="Jogo" allow="fullscreen; autoplay; gamepad; accelerometer; gyroscope" allowfullscreen></iframe><button type="button" id="game-x" aria-label="Voltar ao menu">✕</button>';
-  document.body.appendChild(ov);
-  const fr=ov.querySelector('#game-fr'),xb=ov.querySelector('#game-x');let gameOpen=false;
-  function openGame(a){
-    gameOpen=true;fr.src=a.href;ov.hidden=false;wrap.inert=true;
-    try{history.pushState({vbGame:1},'');}catch(e){}
-    const rf=ov.requestFullscreen||ov.webkitRequestFullscreen;
-    if(rf){try{const p=rf.call(ov);if(p&&p.catch)p.catch(function(){});}catch(e){}}
-    xb.focus();
-  }
-  function closeGame(fromPop){
-    if(!gameOpen)return;gameOpen=false;
-    ov.hidden=true;fr.src='about:blank';wrap.inert=false;
-    const ex=document.exitFullscreen||document.webkitExitFullscreen;
-    if((document.fullscreenElement||document.webkitFullscreenElement)&&ex){try{const p=ex.call(document);if(p&&p.catch)p.catch(function(){});}catch(e){}}
-    if(!fromPop&&history.state&&history.state.vbGame){history.back();}
-    refresh();
-  }
-  xb.addEventListener('click',function(){closeGame(false);});
-  window.addEventListener('popstate',function(){closeGame(true);});
-  box.addEventListener('click',function(e){
-    const a=e.target.closest('.game-card');if(!a)return;
-    markPlayed(a.dataset.id);
-    if(!NEW_TAB&&e.button===0&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){e.preventDefault();openGame(a);}
-  });
+  box.addEventListener('click',function(e){const a=e.target.closest('.game-card');if(a)markPlayed(a.dataset.id);});
   btn.addEventListener('click',function(){try{localStorage.removeItem('vb-played-natal');}catch(e){}refresh();});
   window.addEventListener('pageshow',refresh);refresh();
   const root=document.documentElement,pb=document.createElement('button');pb.type='button';pb.className='reset-btn';box.appendChild(pb);
   function setAnim(off,save){root.classList.toggle('no-anim',off);pb.setAttribute('aria-pressed',off);pb.textContent=off?'▶ Ativar animações':'⏸ Pausar animações';if(save){try{localStorage.setItem('vb-anim',off?'off':'on');}catch(e){}}}
   let saved=null;try{saved=localStorage.getItem('vb-anim');}catch(e){}
   setAnim(saved==='off',false);pb.addEventListener('click',function(){setAnim(!root.classList.contains('no-anim'),true);});
-  const ib=document.createElement('button');ib.type='button';ib.className='reset-btn';ib.hidden=true;ib.textContent='📲 Instalar no ecrã';box.appendChild(ib);
-  const hint=document.createElement('p');hint.className='ios-hint';hint.hidden=true;hint.textContent='No iPhone/iPad: toca em Partilhar (⬆️) e depois em «Adicionar ao ecrã principal».';box.appendChild(hint);
-  const isApp=function(){return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true;};
-  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  let dp=null;
-  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;if(!isApp())ib.hidden=false;});
-  window.addEventListener('appinstalled',function(){dp=null;ib.hidden=true;hint.hidden=true;});
-  if(isIOS&&!isApp())ib.hidden=false;
-  ib.addEventListener('click',function(){if(dp){dp.prompt();dp.userChoice.then(function(){dp=null;ib.hidden=true;});}else{hint.hidden=false;}});
 })();
 function rrVan(ctx,x,y,w,h,r){
   const rr=Math.min(r,w/2,h/2);
