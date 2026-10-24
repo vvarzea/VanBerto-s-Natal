@@ -322,6 +322,27 @@ body::before{
 #game-x:focus-visible{outline:3px solid #ffd700;outline-offset:2px;}
 .ios-hint{align-self:center;max-width:320px;margin:10px 0 0;text-align:center;font:700 12px 'Nunito',sans-serif;color:rgba(255,255,255,0.85);flex-shrink:0;}
 .ios-hint[hidden]{display:none;}
+
+/* ===== PC / ecrãs grandes: menu centrado, com largura máxima (não estica) ===== */
+.card::after{border-radius:inherit;}
+@media(min-width:900px){
+  .games-grid-3{grid-template-columns:repeat(3,1fr);}
+  .games-grid-3>.game-card:last-child:nth-child(odd){grid-column:auto;}
+}
+@media(min-width:900px) and (min-height:600px){
+  .modal-wrap{max-width:1040px;height:calc(100% - clamp(24px,5vh,56px));max-height:900px;}
+  .card{border-radius:28px;box-shadow:0 24px 70px rgba(0,0,0,0.60),0 0 90px rgba(220,38,38,0.14);}
+  /* faixa no fundo do cartão só para o rodapé: a lista de jogos acaba acima dela */
+  .games-section{margin-bottom:46px;padding:min(1vh,10px) clamp(20px,2.4vw,32px) 110px;}
+  #fixed-robot-wrap{right:1.3rem;bottom:1rem;}
+  #prof-tag{left:1.7rem;bottom:.8rem;}
+  .games-section{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 26px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 26px),transparent);}
+}
+/* com espaço dos lados, o VanBerto's fica cá fora, fora do cartão */
+@media(min-width:1280px) and (min-height:600px){
+  #fixed-robot-wrap{position:fixed;right:calc(1.3rem + env(safe-area-inset-right,0px));bottom:calc(1.2rem + env(safe-area-inset-bottom,0px));}
+  .games-section{padding-bottom:30px;}
+}
 </style>
 </head>
 <body>
@@ -366,7 +387,7 @@ body::before{
 </div>
 
 <script>
-const NEW_TAB=false; // true = abrir cada jogo num novo separador
+const NEW_TAB=true; // true = cada jogo abre no seu próprio separador (fora do menu); false = abre dentro do menu, por cima
 const SECTIONS=[
  {t:'🎅 Missão & Aventura',g:[{id:'missao',u:'https://vvarzea.github.io/VanBerto-s-Missao-Natal/',i:'🎅',n:'Missão Natal',d:'Ajuda o Pai Natal a salvar a noite mais mágica do ano, de nível em nível.',tag:'Aventura de Natal',c:'#dc2626',r:'220,38,38,0.55'}]},
  {t:'🧠 Pensar & Resolver',g:[
@@ -399,7 +420,7 @@ function markPlayed(id){try{const p=getPlayed();if(p.indexOf(id)<0){p.push(id);l
   document.getElementById('games').innerHTML=SECTIONS.map(function(sec){
     total+=sec.g.length;
     return '<h2 class="section-divider">'+esc(sec.t)+' <span class="section-count">'+sec.g.length+(sec.g.length===1?' jogo':' jogos')+'</span></h2>'+
-    '<div class="games-grid '+(sec.g.length===1?'games-grid-1':'games-grid-2')+'">'+sec.g.map(function(g){
+    '<div class="games-grid '+(sec.g.length===1?'games-grid-1':'games-grid-2'+(sec.g.length===3?' games-grid-3':''))+'">'+sec.g.map(function(g){
       const url=g.u;
       return '<a class="game-card'+(played.indexOf(g.id)>=0?' played':'')+'" data-id="'+g.id+'" href="'+url+'"'+(NEW_TAB?' target="_blank" rel="noopener noreferrer"':' rel="noopener"')+' style="--gc:'+g.c+';--gc-glow:rgba('+g.r+');">'+
       '<div class="game-icon-tile" aria-hidden="true">'+(ICONS[g.id]?ico(ICONS[g.id]):g.i)+'</div><div class="game-info"><h3 class="game-name">'+esc(g.n)+'</h3><div class="game-desc">'+esc(g.d)+'</div><span class="game-tag">'+esc(g.tag)+'</span></div></a>';
@@ -433,7 +454,7 @@ function markPlayed(id){try{const p=getPlayed();if(p.indexOf(id)<0){p.push(id);l
   window.addEventListener('popstate',function(){closeGame(true);});
   box.addEventListener('click',function(e){
     const a=e.target.closest('.game-card');if(!a)return;
-    markPlayed(a.dataset.id);
+    markPlayed(a.dataset.id);refresh();
     if(!NEW_TAB&&e.button===0&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){e.preventDefault();openGame(a);}
   });
   btn.addEventListener('click',function(){try{localStorage.removeItem('vb-played-natal');}catch(e){}refresh();});
