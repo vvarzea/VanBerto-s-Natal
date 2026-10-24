@@ -1,8 +1,8 @@
-const CACHE='vanberto-central-v8';
+const CACHE='vanberto-central-v9';
 // Essenciais: se faltar um, a instalação falha (e deve falhar).
-const CORE=['./','index.html','natal.html','manifest.webmanifest','favicon.png','apple-touch-icon.png','icon-128.png','icon-192.png','icon-256.png','icon-512.png'];
+const CORE=['./','index.html','manifest.webmanifest','favicon.png','apple-touch-icon.png','icon-128.png','icon-192.png','icon-256.png','icon-512.png','icon-maskable-192.png','icon-maskable-512.png'];
 // Fontes: tolerantes — se algum caminho estiver errado, não impede o service worker de instalar.
-const FONTS=['fonts/fredoka-latin-wght-normal.woff2','fonts/nunito-latin-400-normal.woff2','fonts/nunito-latin-600-normal.woff2','fonts/nunito-latin-700-normal.woff2'];
+const FONTS=['natal.html','fonts/fredoka-latin-wght-normal.woff2','fonts/nunito-latin-400-normal.woff2','fonts/nunito-latin-600-normal.woff2','fonts/nunito-latin-700-normal.woff2'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(async c=>{
   await c.addAll(CORE);
   await Promise.allSettled(FONTS.map(f=>c.add(f)));
