@@ -1,4 +1,4 @@
-const CACHE='vanberto-central-v9';
+const CACHE='vanberto-central-v10';
 // Essenciais: se faltar um, a instalação falha (e deve falhar).
 const CORE=['./','index.html','manifest.webmanifest','favicon.png','apple-touch-icon.png','icon-128.png','icon-192.png','icon-256.png','icon-512.png','icon-maskable-192.png','icon-maskable-512.png'];
 // Fontes: tolerantes — se algum caminho estiver errado, não impede o service worker de instalar.
@@ -13,7 +13,7 @@ self.addEventListener('fetch',e=>{
   const r=e.request;
   if(r.method!=='GET'||new URL(r.url).origin!==location.origin)return;
   e.respondWith(caches.open(CACHE).then(c=>c.match(r,{ignoreSearch:true}).then(hit=>{
-    const net=fetch(r).then(res=>{if(res.ok)c.put(r,res.clone());return res;}).catch(()=>hit);
+    const net=fetch(r).then(res=>{if(res.ok&&res.status===200)c.put(r,res.clone());return res;}).catch(()=>hit||(r.mode==='navigate'?c.match('index.html'):Response.error()));
     return hit||net;
   })));
 });
