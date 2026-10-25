@@ -546,7 +546,7 @@ function drawVanBerto(ctx,blink,step,armsUp){
 
   ctx.fillStyle=NAVY; ctx.beginPath(); ctx.moveTo(45,16); ctx.lineTo(51,16); ctx.lineTo(49.2,8); ctx.lineTo(46.8,8); ctx.closePath(); ctx.fill();
   const halo=ctx.createRadialGradient(48,5,1,48,5,11); halo.addColorStop(0,"rgba(90,200,255,0.55)"); halo.addColorStop(1,"rgba(90,200,255,0)");
-  ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(48,5,11,0,Math.PI*2); ctx.fill();
+  /* halo desativado: o gorro tapa a antena */
   const bg=ctx.createRadialGradient(46.3,3.5,0.5,48,5,5.5); bg.addColorStop(0,"#e6f7ff"); bg.addColorStop(0.4,"#48b4ff"); bg.addColorStop(1,"#1670d8");
   ctx.fillStyle=bg; ctx.beginPath(); ctx.arc(48,5,5.5,0,Math.PI*2); ctx.fill();
   cfVan(ctx,46.2,3.4,1.6,"#ffffff");
@@ -640,11 +640,18 @@ const REDUCED=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let vbBusy=false;
 
 function santaHat(ctx){
+  /* gorro alto: tapa a antena e a luz por inteiro */
   ctx.save();ctx.lineJoin='round';ctx.lineCap='round';
-  ctx.beginPath();ctx.moveTo(29,25);ctx.bezierCurveTo(30,11,44,5,58,10);ctx.bezierCurveTo(66,13,71,19,72,28);ctx.lineTo(29,25);ctx.closePath();
-  ctx.fillStyle='#dc2626';ctx.fill();ctx.lineWidth=2.4;ctx.strokeStyle='#101a30';ctx.stroke();
+  const g=ctx.createLinearGradient(0,2,0,26);g.addColorStop(0,'#e8383b');g.addColorStop(1,'#b81d1f');
+  ctx.beginPath();ctx.moveTo(28,26);
+  ctx.bezierCurveTo(28,11,38,2,50,2.8);
+  ctx.bezierCurveTo(60,3.6,68,11,72,26);
+  ctx.closePath();
+  ctx.fillStyle=g;ctx.fill();ctx.lineWidth=2.4;ctx.strokeStyle='#101a30';ctx.stroke();
+  ctx.lineWidth=2;ctx.strokeStyle='rgba(255,255,255,0.35)';
+  ctx.beginPath();ctx.moveTo(34,17);ctx.bezierCurveTo(35,11,40,7,46,6);ctx.stroke();
   rrVan(ctx,25,22,48,9,4.5);ctx.fillStyle='#ffffff';ctx.fill();ctx.lineWidth=2.4;ctx.strokeStyle='#101a30';ctx.stroke();
-  cfVan(ctx,72,28,5,'#ffffff');ctx.beginPath();ctx.arc(72,28,5,0,Math.PI*2);ctx.stroke();
+  cfVan(ctx,72,27,5.2,'#ffffff');ctx.beginPath();ctx.arc(72,27,5.2,0,Math.PI*2);ctx.stroke();
   ctx.restore();
 }
 function vbSetFrame(blink,step,armsUp){ drawVanBerto(vbCtx,blink,step,armsUp); santaHat(vbCtx); }
