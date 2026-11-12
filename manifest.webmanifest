@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Natal com o VanBerto's",
   "short_name": "VanBerto's",
-  "description": "Jogos de Natal para aprender a brincar com o VanBerto's.",
+  "description": "9 jogos de Natal para aprender a brincar com o VanBerto's.",
   "lang": "pt-PT",
   "start_url": "./",
   "scope": "./",
@@ -12,38 +12,14 @@
     "standalone"
   ],
   "orientation": "any",
-  "background_color": "#0b2016",
-  "theme_color": "#0b2016",
+  "background_color": "#fff8e7",
+  "theme_color": "#fff8e7",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-256.png",
-      "sizes": "256x256",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-maskable-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-256.png", "sizes": "256x256", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
